@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<AssemblyName>Timesheet</AssemblyName>
+		<RootNamespace>Timesheet</RootNamespace>
+		<Version>1.0.0.0</Version>  
+    	<FileVersion>1.0.0.0</FileVersion> 
+		<OutputPath>bin\</OutputPath>
+		<LangVersion>11.0</LangVersion>
+		<OutputType>exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+	
+	<ItemGroup>
+    	<PackageReference Include="EPPlus" Version="5.6.3" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Compile Include="Program.cs" />
+		<Compile Include="Config.cs" />
+		<Compile Include="ConfigFile.cs" />
+		<Compile Include="TimesheetDocument.cs" />
+		<Compile Include="TimesheetParams.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="template.xlsx" CopyToOutputDirectory="PreserveNewest"/>
+	</ItemGroup>
+	
+</Project>
