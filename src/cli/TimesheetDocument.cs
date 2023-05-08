@@ -35,7 +35,7 @@ public static class TimesheetDocument
 		// Check if template file exists
 		if (!File.Exists(TemplateFile))
 		{
-            Console.WriteLine($"Error: template file '{(TemplateFile)}' missing.");
+			Console.WriteLine($"Error: template file '{(TemplateFile)}' missing.");
 			return false;
 		}
 		
