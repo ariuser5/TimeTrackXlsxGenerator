@@ -15,19 +15,30 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
+    	<PackageReference Include="CommandLineParser" Version="2.9.1" />
     	<PackageReference Include="EPPlus" Version="5.6.3" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<Compile Include="Program.cs" />
+		<Compile Include="Options.cs" />
+		<Compile Include="Options.Defaults.cs" />
 		<Compile Include="Config.cs" />
 		<Compile Include="ConfigFile.cs" />
 		<Compile Include="TimesheetDocument.cs" />
-		<Compile Include="TimesheetParams.cs" />
+		<Compile Include="TimesheetDocmuentOptions.cs" />
+		<Compile Include="DateMonth.cs" />
+		<Compile Include="OptionsReader.cs" />
+		<Compile Include="Converters\DateMonthConverter.cs" />
+		<Compile Include="Converters\TableCoordinatesConverter.cs" />
+		<Compile Include="Serialization\Defaults.cs" />
+		<Compile Include="Serialization\Serializer.cs" />
+		<Compile Include="CommandLine\CommandLineOptions.cs" />
+		<Compile Include="CommandLine\OptionParseException.cs" />
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Include="template.xlsx" CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="template.xlsx" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	
 </Project>

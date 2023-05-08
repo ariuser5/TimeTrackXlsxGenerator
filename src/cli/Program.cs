@@ -1,21 +1,14 @@
-// Snapshots the current time instance
-DateTime now = DateTime.Now;
 
-// Read configuration from json file
-bool mustCreateConfigFileIfMissing = !HasNoConfigFlag(args);
-Config config = ConfigFile.Read(mustCreateConfigFileIfMissing);
+// Read configuration from command line arguments and config file
+Options? options = OptionsReader.Read(args, onError: (ex) => Console.WriteLine(ex.Message));
+
+if (options is null) return;
+else {
+	string json = Timesheet.Serialization.Serializer.Serialize(options);
+	Console.WriteLine($"Timesheet options:\n{json}");
+}
 
 // Generate output file name
-string outputFileName = $"TimeTrack_{now:yyyy_MM}.xlsx";
-string outputFile = Path.Combine(config.OutputLocation, outputFileName);
-TimesheetDocument.Create(config, now, outputFile);
-
-static bool HasNoConfigFlag(string[] args)
-{
-	for (int i = 0; i < args.Length; i++)
-	{
-		if (args[i] == "--no-config")
-			return true;
-	}
-	return false;
-}
+string outputFileName = $"TimeTrack_{options.Date.ToString("MM.yyyy")}.xlsx";
+string outputFile = Path.Combine(options.OutputLocation, outputFileName);
+TimesheetDocument.Create(options, outputFile);
