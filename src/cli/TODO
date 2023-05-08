@@ -1,0 +1,6 @@
+
+- ReferencedDate should not be included in default serialization of config file.
+- Fix parsing of -d and --date value
+- Clean up
+- Rename repo and project with by adding "cverk" before and namespaces should include it as well...
+- Restructure project folders: "src" should be inside "cli" and not the other way around. Folder "lib", same case...
