@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Timesheet.Converters;
 
-class DateMonthConverter : JsonConverter<DateMonth>
+public class DateMonthConverter : JsonConverter<DateMonth>
 {
 	public override DateMonth Read(
 		ref Utf8JsonReader reader, 

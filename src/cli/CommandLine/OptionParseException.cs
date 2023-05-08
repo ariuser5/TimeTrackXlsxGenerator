@@ -1,11 +1,9 @@
 using System.Reflection;
 using CommandLine;
 
-using CommandLineSource = CommandLine;
-
 namespace Timesheet.CommandLine;
 
-class OptionParseException : Exception
+public class OptionParseException : Exception
 {
 	public OptionParseException() : base() { }
 	

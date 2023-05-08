@@ -1,20 +1,13 @@
-using System.Reflection;
 using CommandLine;
 
 namespace Timesheet.CommandLine;
 
-class CommandLineOptions
+public record CommandLineOptions
 {
-	// private string? _worksheetName;
-    
-
-    // [Value()]
-    // public string? Some { get; set; }
-
-	[Option('d', "date", 
+	[Value(0, 
         Required = false,
-        HelpText = $"Month for which to generate timesheet. Allowed formats:\n{DateMonth.Formats}.")]
-	public string? ReferencedDate { get; set; }
+        HelpText = $"Month for which to generate timesheet. Allowed formats:\n{DateMonth.InputFormats}.")]
+	public string? Date { get; set; }
 	
 	[Option('o', "output-location",
         Required = false,
@@ -55,41 +48,10 @@ class CommandLineOptions
         Required = false,
         HelpText = "Worksheet name.")]
 	public string? WorksheetName { get; set; }
-    //     get => _worksheetName; 
-    //     set {
-    //         Console.WriteLine($"Setting worksheet name to '{value}'");
-    //         _worksheetName = value?.Trim();
-    //     }
-    // }
-
+    
 	[Option("allow-missing-config",
         Required = false,
         Default = false,
         HelpText = "Do not generate config file if missing.")]
 	public bool AllowMissingConfig { get; set; }
-    
-    
-    public CommandLineOptions()
-	{
-		// ReferencedDate = new CommandLineOption<string?>(GetOptionsAttribute(nameof(ReferencedDate)));
-        // OutputLocation = new CommandLineOption<string?>(GetOptionsAttribute(nameof(OutputLocation)));
-        // UserName = new CommandLineOption<string?>(GetOptionsAttribute(nameof(UserName)));
-        // StartCell = new CommandLineOption<string?>(GetOptionsAttribute(nameof(StartCell)));
-        // RowsSpace = new CommandLineOption<int?>(GetOptionsAttribute(nameof(RowsSpace)));
-        // WorkHours = new CommandLineOption<int?>(GetOptionsAttribute(nameof(WorkHours)));
-        // DescriptionPlaceholder = new CommandLineOption<string?>(GetOptionsAttribute(nameof(DescriptionPlaceholder)));
-        // DateFormat = new CommandLineOption<string?>(GetOptionsAttribute(nameof(DateFormat)));
-        // WorksheetName = new CommandLineOption<string?>(GetOptionsAttribute(nameof(WorksheetName)));
-        // AllowMissingConfig = new CommandLineOption<bool>(GetOptionsAttribute(nameof(AllowMissingConfig)));
-	}
-    
-    private OptionAttribute GetOptionsAttribute(string propertyName)
-    {
-        OptionAttribute? attribute = this.GetType().GetProperty(propertyName)?.GetCustomAttribute<OptionAttribute>(true);
-        
-        if (attribute is null)
-            throw new ArgumentException($"Property '{propertyName}' is not an option.");
-        
-        return attribute;
-    }
 }

@@ -1,10 +1,10 @@
 using OfficeOpenXml;
 
-static class TimesheetDocument
+public static class TimesheetDocument
 {
 	public const string TemplateFile = "template.xlsx";
 	
-	public static void Create(TimesheetOptions options, string filePath)
+	public static void Create(TimesheetDocmuentOptions options, string filePath)
 	{
 		bool isValidInput = ValidateInput(options);
 		if (!isValidInput) 
@@ -22,7 +22,7 @@ static class TimesheetDocument
 			worksheet.Name = options.WorksheetName;
 		}
 		
-		DateTime targetMonth = new(options.ReferencedDate.Year, options.ReferencedDate.Month, 1);
+		DateTime targetMonth = new(options.Date.Year, options.Date.Month, 1);
 		WriteDateCell(worksheet, targetMonth, options);
 		WriteDaysEntries(worksheet, targetMonth, options);
 		
@@ -30,15 +30,8 @@ static class TimesheetDocument
 		Console.WriteLine($"Time track file generated: {filePath}");
 	}
 
-	static bool ValidateInput(TimesheetOptions options)
+	static bool ValidateInput(TimesheetDocmuentOptions options)
 	{
-		// Check if start cell is valid
-		// if (options.StartCell.Length != 2)
-		// {
-		// 	Console.WriteLine("Error: start cell must be an array of two integers.");
-		// 	return false;
-		// }
-		
 		// Check if template file exists
 		if (!File.Exists(TemplateFile))
 		{
@@ -49,7 +42,7 @@ static class TimesheetDocument
 		return true;
 	}
 	
-	static void WriteDateCell(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetOptions options)
+	static void WriteDateCell(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetDocmuentOptions options)
 	{
 		int daysInMonth = DateTime.DaysInMonth(targetMonth.Year, targetMonth.Month);
 		DateTime lastMonthDay = new(targetMonth.Year, targetMonth.Month, daysInMonth);
@@ -58,7 +51,7 @@ static class TimesheetDocument
 		worksheet.Cells[row, column].Value = $"01-{lastMonthDay.ToString(options.DateFormat)}";
 	}
 
-	static void WriteDaysEntries(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetOptions options)
+	static void WriteDaysEntries(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetDocmuentOptions options)
 	{
 		int writtenDays = 0;
 		int startRow = options.StartCell.row + options.RowsSpace + 1;
@@ -88,7 +81,7 @@ static class TimesheetDocument
 		WriteTotalHours(worksheet, options, writtenDays);
 	}
 	
-	private static void WriteTotalHours(ExcelWorksheet worksheet, TimesheetOptions options, int writtenDays)
+	private static void WriteTotalHours(ExcelWorksheet worksheet, TimesheetDocmuentOptions options, int writtenDays)
 	{
 		int referenceColumn = options.StartCell.col + 2;
 		string columnName = ConvertToExcelColumnName(referenceColumn);

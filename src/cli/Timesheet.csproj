@@ -22,19 +22,19 @@
 	<ItemGroup>
 		<Compile Include="Program.cs" />
 		<Compile Include="Options.cs" />
+		<Compile Include="Options.Defaults.cs" />
+		<Compile Include="Config.cs" />
 		<Compile Include="ConfigFile.cs" />
 		<Compile Include="TimesheetDocument.cs" />
-		<Compile Include="TimesheetOptions.cs" />
+		<Compile Include="TimesheetDocmuentOptions.cs" />
 		<Compile Include="DateMonth.cs" />
 		<Compile Include="OptionsReader.cs" />
 		<Compile Include="Converters\DateMonthConverter.cs" />
 		<Compile Include="Converters\TableCoordinatesConverter.cs" />
-		<Compile Include="CommandLine\ExtendedParser.cs" />
+		<Compile Include="Serialization\Defaults.cs" />
+		<Compile Include="Serialization\Serializer.cs" />
 		<Compile Include="CommandLine\CommandLineOptions.cs" />
-		<Compile Include="CommandLine\CommandLineOption.cs" />
-		<Compile Include="CommandLine\ErrorConverter.cs" />
 		<Compile Include="CommandLine\OptionParseException.cs" />
-		<Compile Include="CommandLine\Exceptions\BadReferenceDateFormatError.cs" />
 	</ItemGroup>
 	
 	<ItemGroup>

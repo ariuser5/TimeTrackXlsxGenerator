@@ -1,12 +1,24 @@
 using System.Globalization;
 
-struct DateMonth
+public struct DateMonth
 {
-	public const string Formats = 
-		"""
-		MM.yyyy, yyyy.MM, MM/yyyy, yyyy/MM, MM-yyyy, yyyy-MM, MM_yyyy, yyyy_MM,
-		MM.yy, yy.MM, MM/yy, yy/MM, MM-yy, yy-MM, MM_yy, yy_MM
-		""";
+	
+	/// <summary>
+	/// The string representation of a date and time.
+	/// <para>
+	/// MM.yyyy, yyyy.MM, MM/yyyy, yyyy/MM, MM-yyyy, yyyy-MM, MM_yyyy, yyyy_MM
+	/// </para>
+	/// </summary>
+	public const string InputFormats = "MM.yyyy, yyyy.MM, MM/yyyy, yyyy/MM, MM-yyyy, yyyy-MM, MM_yyyy, yyyy_MM";
+	
+	/// <summary>
+	/// The string representation of a date and time.
+	/// <para>
+	/// MM.yyyy, yyyy.MM, MM/yyyy, yyyy/MM, MM-yyyy, yyyy-MM, MM_yyyy, yyyy_MM
+	/// MM.yy, yy.MM, MM/yy, yy/MM, MM-yy, yy-MM, MM_yy, yy_MM
+	/// </para>
+	/// </summary>
+	public const string OutputFormats = "MM.yyyy, yyyy.MM, MM/yyyy, yyyy/MM, MM-yyyy, yyyy-MM, MM_yyyy, yyyy_MM, MM.yy, yy.MM, MM/yy, yy/MM, MM-yy, yy-MM, MM_yy, yy_MM";
 
 	public int Year { get; init; }
 	public int Month { get; init; }
@@ -17,9 +29,17 @@ struct DateMonth
 		this.Month = month;
 	}
 	
+	/// <summary>
+	/// Returns the string representation of the date and time with a specified format.
+	/// </summary>
+	/// <param name="format">The format of the string representation.</param>
+	/// <returns>The string representation of the date and time.</returns>
+	/// <remarks>
+	/// The format string must be one of the following:<br/><inheritdoc cref="OutputFormats" path="/summary/para"/>.
+	/// </remarks>
 	public string ToString(string format)
 	{
-		bool isValidFormat = ValidFormats.Contains(format);
+		bool isValidFormat = ValidOutputFormats.Contains(format);
 		if (!isValidFormat) {
 			throw new ArgumentException(
 				$"Invalid format '{format}' for {typeof(DateMonth)} object."
@@ -57,10 +77,12 @@ struct DateMonth
 		return HashCode.Combine(Year, Month);
 	}
 	
-	
 
-	private static string[] _validFormats = Formats.Split(",").Select(s => s.Trim()).ToArray();
-	public static string[] ValidFormats => _validFormats;
+	private static string[] _validInputFormats = InputFormats.Split(",").Select(s => s.Trim()).ToArray();
+	private static string[] _validOutputFormats = OutputFormats.Split(",").Select(s => s.Trim()).ToArray();
+	
+	public static string[] ValidInputFormats => _validInputFormats;
+	public static string[] ValidOutputFormats => _validOutputFormats;
 
 	public static DateMonth Parse(string input)
 	{
@@ -73,11 +95,20 @@ struct DateMonth
 		return result;
 	}
 	
+	/// <summary>
+	/// Parses the string representation of a date and time with a specified format.
+	/// </summary>
+	/// <param name="input">The string representation of a date and time.</param>
+	/// <param name="result">The parsed date and time.</param>
+	/// <returns>True if the input was successfully parsed; otherwise, false.</returns>
+	/// <remarks>
+	/// The input string must be in one of the following formats:<br/><inheritdoc cref="InputFormats" path="/summary/para"/>.
+	/// </remarks>
 	public static bool TryParse(string input, out DateMonth result)
 	{
 		bool isParsed = DateTime.TryParseExact(
-			s: input, 
-			formats: ValidFormats, 
+			s: input,
+			formats: ValidInputFormats,
 			provider: CultureInfo.InvariantCulture, 
 			style: DateTimeStyles.None, 
 			result: out DateTime dateTime);

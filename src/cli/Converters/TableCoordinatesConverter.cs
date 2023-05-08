@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Timesheet.Converters;
 
-class TableCoordinatesConverter : JsonConverter<(int row, int col)>
+public class TableCoordinatesConverter : JsonConverter<(int row, int col)>
 {
 	public override (int row, int col) Read(
 		ref Utf8JsonReader reader,
