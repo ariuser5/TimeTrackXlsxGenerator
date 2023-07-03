@@ -19,10 +19,10 @@ jobs:
         dotnet-version: '7.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore cli/src/Timesheet.csproj
 
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build cli/src/Timesheet.csproj --configuration Release
 
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal
