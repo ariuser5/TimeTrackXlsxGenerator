@@ -23,6 +23,15 @@ jobs:
 
     - name: Build
       run: dotnet build cli/src/Timesheet.csproj --configuration Release
+    
+    - name: Publish
+      run: dotnet publish cli/src/Timesheet.csproj --configuration Release --output ./publish
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with: 
+        name: MyApp
+        path: ./publish
 
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal
