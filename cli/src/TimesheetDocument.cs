@@ -60,10 +60,6 @@ public static class TimesheetDocument
 			date.Month == targetMonth.Month; 
 			date = date.AddDays(1)
 		) {
-			// Skip weekend days
-			if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-				continue;
-
 			int currentRow = startRow + writtenDays;
 			int currentColumn = options.StartCell.col;
 			
@@ -73,6 +69,11 @@ public static class TimesheetDocument
 			// Write data to the row
 			worksheet.Cells[currentRow, currentColumn++].Value = options.UserName;
 			worksheet.Cells[currentRow, currentColumn++].Value = date.ToString(options.DateFormat);
+			
+			// Skip weekend days
+			if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+				continue;
+			
 			worksheet.Cells[currentRow, currentColumn++].Value = options.WorkHours;
 			worksheet.Cells[currentRow, currentColumn++].Value = options.DescriptionPlaceholder;
 			writtenDays++;
