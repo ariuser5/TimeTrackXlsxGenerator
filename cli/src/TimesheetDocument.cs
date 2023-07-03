@@ -60,7 +60,7 @@ public static class TimesheetDocument
 			date.Month == targetMonth.Month; 
 			date = date.AddDays(1)
 		) {
-			int currentRow = startRow + writtenDays;
+			int currentRow = startRow + (writtenDays++);
 			int currentColumn = options.StartCell.col;
 			
 			// Insert new row
@@ -76,7 +76,6 @@ public static class TimesheetDocument
 			
 			worksheet.Cells[currentRow, currentColumn++].Value = options.WorkHours;
 			worksheet.Cells[currentRow, currentColumn++].Value = options.DescriptionPlaceholder;
-			writtenDays++;
 		}
 		
 		WriteTotalHours(worksheet, options, writtenDays);
