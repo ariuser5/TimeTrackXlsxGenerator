@@ -5,6 +5,8 @@ namespace Timesheet.Converters;
 
 public class TableCoordinatesConverter : JsonConverter<(int row, int col)>
 {
+	public const string Format = "{0}:{1}";
+	
 	public override (int row, int col) Read(
 		ref Utf8JsonReader reader,
 		Type typeToConvert,
@@ -16,7 +18,10 @@ public class TableCoordinatesConverter : JsonConverter<(int row, int col)>
 			throw new JsonException("Date string is null.");
 		
 		string[] parts = valueString.Split(':', StringSplitOptions.TrimEntries);
-		if (int.TryParse(parts[0], out int row) && int.TryParse(parts[1], out int col)) {
+		if (parts.Length == 2 &&
+			int.TryParse(parts[0], out int row) &&
+			int.TryParse(parts[1], out int col)
+		) {
 			return (row, col);
 		} else {
 			throw new JsonException($"Unable to parse table coordinates: {valueString}");
@@ -28,6 +33,7 @@ public class TableCoordinatesConverter : JsonConverter<(int row, int col)>
 		(int row, int col) value,
 		JsonSerializerOptions options)
 	{
-		writer.WriteStringValue($"{value.row}:{value.col}");
+		string formattedValue = string.Format(Format, value.row, value.col);
+		writer.WriteStringValue(formattedValue);
 	}
 }

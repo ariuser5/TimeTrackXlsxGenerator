@@ -12,7 +12,7 @@ public static class OptionsReader
 	{
 		Options? instance = CommandLine.Parser.Default.ParseArguments<CommandLineOptions>(args)
 			.MapResult<CommandLineOptions, Options?>(
-				parsedFunc: (o) => ReadFromCommandLineOptions(o, onError),
+				parsedFunc: (options) => ReadFromCommandLineOptions(options, onError),
 				notParsedFunc: (errors) => {
 					foreach (Error err in errors) {
 						OptionParseException? parseException = OptionParseException.From(err);
@@ -32,24 +32,24 @@ public static class OptionsReader
 	{
 		bool mustCreateIfMissing = !options.AllowMissingConfig;
 		Lazy<Config?> configFile = new(() => ConfigFile.Read(mustCreateIfMissing));
-		Options instance = new();
+		Options result = new();
 		try {
-			instance.AllowMissingConfig = options.AllowMissingConfig;
+			result.AllowMissingConfig = options.AllowMissingConfig;
 			OverrideOptionsWithDeferredAlternative(
-				instance.OverrideDateFrom(options, configFile),
-				instance.OverrideUserNameFrom(options, configFile),
-				instance.OverrideStartCellFrom(options, configFile),
-				instance.OverrideRowsSpaceFrom(options, configFile),
-				instance.OverrideWorkHoursFrom(options, configFile),
-				instance.OverrideDescriptionPlaceholderFrom(options, configFile),
-				instance.OverrideDateFormatFrom(options, configFile),
-				instance.OverrideWorksheetNameFrom(options, configFile)
+				result.OverrideDateFrom(options, configFile),
+				result.OverrideUserNameFrom(options, configFile),
+				result.OverrideStartCellFrom(options, configFile),
+				result.OverrideRowsSpaceFrom(options, configFile),
+				result.OverrideWorkHoursFrom(options, configFile),
+				result.OverrideDescriptionPlaceholderFrom(options, configFile),
+				result.OverrideDateFormatFrom(options, configFile),
+				result.OverrideWorksheetNameFrom(options, configFile)
 			);
 		} catch (OptionParseException parseException) {
 			onError?.Invoke(parseException);
 			return null;
 		}
-		return instance;
+		return result;
 	}
 	
 	private static void OverrideOptionsWithDeferredAlternative(params Action?[] alternatives)

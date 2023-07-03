@@ -88,9 +88,7 @@ public struct DateMonth
 	{
 		bool isParsed = TryParse(input, out DateMonth result);
 		if (!isParsed) {
-			throw new FormatException(
-				$"Invalid format '{input}' for {typeof(DateMonth)} object."
-			);
+			throw new FormatException($"Invalid format '{input}' for {typeof(DateMonth)} object.");
 		}
 		return result;
 	}
