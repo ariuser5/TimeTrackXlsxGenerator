@@ -1,0 +1,9 @@
+{
+  "outputLocation": ".",
+  "userName": "User",
+  "startCell": "4:2",
+  "rowsSpace": 7,
+  "workHours": 8,
+  "descriptionPlaceholder": "<Desc>",
+  "dateFormat": "dd.MM.yyyy"
+}
