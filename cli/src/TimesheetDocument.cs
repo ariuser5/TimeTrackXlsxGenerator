@@ -1,11 +1,18 @@
+using System.Drawing;
 using OfficeOpenXml;
+using Timesheet.Holidays;
 
 public static class TimesheetDocument
 {
 	public const string TemplateFile = "template.xlsx";
 	
-	public static void Create(TimesheetDocmuentOptions options, string filePath)
+	static TimesheetDocument()
 	{
+		ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+	}
+	
+	public static void Create(TimesheetDocmuentOptions options, string filePath)
+	{		
 		bool isValidInput = ValidateInput(options);
 		if (!isValidInput) 
 		{
@@ -23,8 +30,9 @@ public static class TimesheetDocument
 		}
 		
 		DateTime targetMonth = new(options.Date.Year, options.Date.Month, 1);
+		HolidaysService holidaysService = new();
 		WriteDateCell(worksheet, targetMonth, options);
-		WriteDaysEntries(worksheet, targetMonth, options);
+		WriteDaysEntries(worksheet, targetMonth, options, holidaysService);
 		
 		package.SaveAs(new FileInfo(filePath));
 		Console.WriteLine($"Time track file generated: {filePath}");
@@ -51,15 +59,22 @@ public static class TimesheetDocument
 		worksheet.Cells[row, column].Value = $"01-{lastMonthDay.ToString(options.DateFormat)}";
 	}
 
-	static void WriteDaysEntries(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetDocmuentOptions options)
+	static void WriteDaysEntries(
+		ExcelWorksheet worksheet,
+		DateTime targetMonth,
+		TimesheetDocmuentOptions options,
+		IHolidaysService? holidaysService = null)
 	{
 		int writtenDays = 0;
 		int startRow = options.StartCell.row + options.RowsSpace + 1;
 		for (
-			DateTime date = targetMonth; 
-			date.Month == targetMonth.Month; 
-			date = date.AddDays(1)
+			DateTime currentDate = targetMonth; 
+			currentDate.Month == targetMonth.Month; 
+			currentDate = currentDate.AddDays(1)
 		) {
+			string? holidayName = holidaysService?.GetHolidayName(currentDate);
+			bool isHoliday = holidayName is not null;
+			
 			int currentRow = startRow + (writtenDays++);
 			int currentColumn = options.StartCell.col;
 			
@@ -68,11 +83,22 @@ public static class TimesheetDocument
 			
 			// Write data to the row
 			worksheet.Cells[currentRow, currentColumn++].Value = options.UserName;
-			worksheet.Cells[currentRow, currentColumn++].Value = date.ToString(options.DateFormat);
+			worksheet.Cells[currentRow, currentColumn++].Value = currentDate.ToString(options.DateFormat);
 			
-			// Skip weekend days
-			if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-				continue;
+			if (isHoliday) {
+				// Color the row in yellow			
+				ExcelRow row = worksheet.Row(currentRow);
+				row.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+				row.Style.Fill.BackgroundColor.SetColor(Color.Yellow);
+				
+				worksheet.Cells[currentRow, ++currentColumn].Value = holidayName!;
+			}
+			
+			// Skip weekend days and holidays
+			if (isHoliday ||
+				currentDate.DayOfWeek == DayOfWeek.Saturday ||
+				currentDate.DayOfWeek == DayOfWeek.Sunday
+			) continue;
 			
 			worksheet.Cells[currentRow, currentColumn++].Value = options.WorkHours;
 			worksheet.Cells[currentRow, currentColumn++].Value = options.DescriptionPlaceholder;
