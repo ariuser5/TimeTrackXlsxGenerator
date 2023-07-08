@@ -1,3 +1,4 @@
+using System.Drawing;
 using OfficeOpenXml;
 
 public static class TimesheetDocument
@@ -24,7 +25,7 @@ public static class TimesheetDocument
 		
 		DateTime targetMonth = new(options.Date.Year, options.Date.Month, 1);
 		WriteDateCell(worksheet, targetMonth, options);
-		WriteDaysEntries(worksheet, targetMonth, options);
+		WriteDaysEntries(worksheet, targetMonth, options, );
 		
 		package.SaveAs(new FileInfo(filePath));
 		Console.WriteLine($"Time track file generated: {filePath}");
@@ -51,7 +52,11 @@ public static class TimesheetDocument
 		worksheet.Cells[row, column].Value = $"01-{lastMonthDay.ToString(options.DateFormat)}";
 	}
 
-	static void WriteDaysEntries(ExcelWorksheet worksheet, DateTime targetMonth, TimesheetDocmuentOptions options)
+	static void WriteDaysEntries(
+		ExcelWorksheet worksheet,
+		DateTime targetMonth,
+		TimesheetDocmuentOptions options,
+		IHolidaysService? holidaysService = null)
 	{
 		int writtenDays = 0;
 		int startRow = options.StartCell.row + options.RowsSpace + 1;
@@ -60,6 +65,9 @@ public static class TimesheetDocument
 			date.Month == targetMonth.Month; 
 			date = date.AddDays(1)
 		) {
+			string? holidayName = holidaysService?.GetHolidayName(date);
+			bool isHoliday = holidayName is not null;
+			
 			int currentRow = startRow + (writtenDays++);
 			int currentColumn = options.StartCell.col;
 			
@@ -70,9 +78,18 @@ public static class TimesheetDocument
 			worksheet.Cells[currentRow, currentColumn++].Value = options.UserName;
 			worksheet.Cells[currentRow, currentColumn++].Value = date.ToString(options.DateFormat);
 			
-			// Skip weekend days
-			if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-				continue;
+			if (isHoliday) {
+				// Color the row in yellow
+				ExcelRange range = worksheet.Cells[currentRow, currentColumn - 2, currentRow, currentColumn + 2];
+				range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+				range.Style.Fill.BackgroundColor.SetColor(Color.Yellow);
+			}
+			
+			// Skip weekend days and holidays
+			if (isHoliday ||
+				date.DayOfWeek == DayOfWeek.Saturday ||
+				date.DayOfWeek == DayOfWeek.Sunday
+			) continue;
 			
 			worksheet.Cells[currentRow, currentColumn++].Value = options.WorkHours;
 			worksheet.Cells[currentRow, currentColumn++].Value = options.DescriptionPlaceholder;
@@ -110,5 +127,13 @@ public static class TimesheetDocument
 		} 
 
 		return columnName;
+	}
+}
+
+class HolidaysService: IHolidaysService
+{
+	public string? GetHolidayName(DateTime date)
+	{
+		return "St. asd";
 	}
 }

@@ -9,6 +9,7 @@
 		<LangVersion>11.0</LangVersion>
 		<OutputType>exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -29,12 +30,14 @@
 		<Compile Include="TimesheetDocmuentOptions.cs" />
 		<Compile Include="DateMonth.cs" />
 		<Compile Include="OptionsReader.cs" />
+		<Compile Include="IHolidaysService.cs" />
 		<Compile Include="Converters\DateMonthConverter.cs" />
 		<Compile Include="Converters\TableCoordinatesConverter.cs" />
 		<Compile Include="Serialization\Defaults.cs" />
 		<Compile Include="Serialization\Serializer.cs" />
 		<Compile Include="CommandLine\CommandLineOptions.cs" />
 		<Compile Include="CommandLine\OptionParseException.cs" />
+		<Compile Include="HolidaysApiClient\Downloader.cs" />
 	</ItemGroup>
 	
 	<ItemGroup>
